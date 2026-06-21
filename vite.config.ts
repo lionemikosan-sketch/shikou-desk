@@ -3,8 +3,13 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'node:path';
 
+// GitHub Pages のプロジェクトサイトは /shikou-desk/ 配下で配信されるため、
+// 本番ビルドだけ base をサブパスにする（開発サーバーはルートのまま）。
+const BASE = '/shikou-desk/';
+
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? BASE : '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -24,8 +29,7 @@ export default defineConfig({
         display: 'standalone',
         orientation: 'portrait',
         lang: 'ja',
-        start_url: '/',
-        scope: '/',
+        // start_url / scope は Vite の base から自動で設定される
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -55,4 +59,4 @@ export default defineConfig({
       },
     }),
   ],
-});
+}));
